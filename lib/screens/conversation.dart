@@ -116,8 +116,6 @@ class _ConversationState extends State<Conversation> {
     });
   }
 
- 
-
   static Random random = Random();
   String name = names[random.nextInt(10)];
 
@@ -125,7 +123,7 @@ class _ConversationState extends State<Conversation> {
     if (Theme.of(context).brightness == Brightness.dark) {
       return Colors.grey[700];
     } else {
-      return Colors.grey[50];
+      return Colors.black;
     }
   }
 
@@ -155,14 +153,14 @@ class _ConversationState extends State<Conversation> {
   void initState() {
     // TODO: implement initState
     super.initState();
-     Admob.initialize(ams.getAdMobAppId());
+    Admob.initialize(ams.getAdMobAppId());
 
     loadGrade();
 
     upadateFeeDetails([
       {'fee': 0, 'days': 0}
     ]);
-    
+
     if ((widget.approvedGroups.contains(widget.userId))) {
       //  prime group
       selectedRadio = 2;
@@ -185,7 +183,8 @@ class _ConversationState extends State<Conversation> {
     }
     setReadCountToClear();
   }
-   @override
+
+  @override
   void dispose() {
     super.dispose();
   }
@@ -284,28 +283,26 @@ class _ConversationState extends State<Conversation> {
     // getFeeDeatils();
     int setScrollDelay = widget.chatId.contains('PGrp') ? 1 : 0;
     Timer(
-    Duration(seconds: setScrollDelay),
-    () => {
-      if(_scrollController.hasClients) {
-    _scrollController.animateTo(
-  _scrollController.position.maxScrollExtent,
-  duration: Duration(seconds: 1),
-  curve: Curves.fastOutSlowIn,
-      
-),
-      }
-      }
-  );
+        Duration(seconds: setScrollDelay),
+        () => {
+              if (_scrollController.hasClients)
+                {
+                  _scrollController.animateTo(
+                    _scrollController.position.maxScrollExtent,
+                    duration: Duration(seconds: 1),
+                    curve: Curves.fastOutSlowIn,
+                  ),
+                }
+            });
     return WillPopScope(
       onWillPop: _onBackPress,
       child: Scaffold(
-        backgroundColor: backgroundColor(),
+        backgroundColor: Colors.white,
         appBar: appBarWid(),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Column(
             children: <Widget>[
-              
               Container(
                 height: 10,
               ),
@@ -328,7 +325,7 @@ class _ConversationState extends State<Conversation> {
                             messageCount = snapshot.data['messages'].length;
                             nonPrimeMessageContent = snapshot.data['messages'];
                             return ListView.builder(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
                               itemCount: snapshot.data['messages'].length,
                               controller: _scrollController,
                               // shrinkWrap: true,
@@ -339,29 +336,31 @@ class _ConversationState extends State<Conversation> {
                                 //  scrollToBottomFun();
                                 // var datestamp = new DateFormat("dd-MM'T'HH:mm");
                                 var datestamp = new DateFormat("HH:mm");
-                                   return ChatBubble(
-                                      message: snapshot.data['messages'][indexVal]['type'] == "text"
-                                          ? snapshot.data['messages'][indexVal]
-                                              ['messageBody']
-                                          : snapshot.data['messages'][indexVal]
-                                              ['imageUrl'],
-                                      premium: snapshot.data['messages']
-                                          [indexVal]['premium'],
-                                      type: snapshot.data['messages'][indexVal]
-                                          ['type'],
-                                      img: snapshot.data['messages'][indexVal]
-                                          ['imageUrl'],
-                                      name: snapshot.data['messages'][indexVal]
-                                          ['type'],
-                                      dp: snapshot.data['messages'][indexVal]
-                                          ['imageUrl'],
-                                      messageMode: snapshot.data['messages']
-                                          [indexVal]['messageMode'],
-                                      time: datestamp
-                                          .format(snapshot.data['messages'][indexVal]['date'].toDate())
-                                          .toString(),
-                                      selMessageMode: msgDeliveryMode);
-                              
+                                return ChatBubble(
+                                    message: snapshot.data['messages'][indexVal]
+                                                ['type'] ==
+                                            "text"
+                                        ? snapshot.data['messages'][indexVal]
+                                            ['messageBody']
+                                        : snapshot.data['messages'][indexVal]
+                                            ['imageUrl'],
+                                    premium: snapshot.data['messages'][indexVal]
+                                        ['premium'],
+                                    type: snapshot.data['messages'][indexVal]
+                                        ['type'],
+                                    img: snapshot.data['messages'][indexVal]
+                                        ['imageUrl'],
+                                    name: snapshot.data['messages'][indexVal]
+                                        ['type'],
+                                    dp: snapshot.data['messages'][indexVal]
+                                        ['imageUrl'],
+                                    messageMode: snapshot.data['messages']
+                                        [indexVal]['messageMode'],
+                                    time: datestamp
+                                        .format(snapshot.data['messages'][indexVal]['date'].toDate())
+                                        .toString(),
+                                    // date: datestamp.format(snapshot.data['messages'][indexVal]['truedate'].toDate()).toString(),
+                                    selMessageMode: msgDeliveryMode);
 
                                 // fresh start check
                               },
@@ -393,79 +392,97 @@ class _ConversationState extends State<Conversation> {
               Visibility(
                 visible: (widget.chatOwnerId == widget.userId),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: Container(
-                    width: dw * 1,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text("Send To",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w800,
-                              )),
-                          Row(
+                  padding: const EdgeInsets.all(8),
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(5),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                      ),
+                      width: dw * 1,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Radio(
-                                    value: 1,
-                                    groupValue: selectedRadio,
-                                    activeColor: Colors.green,
-                                    onChanged: (val) {
-                                      setSelectedRadio(val);
-                                    },
-                                  ),
-                                  Text("Common",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: Color(0xff3A4276),
-                                        fontWeight: FontWeight.w500,
-                                      ))
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text("Send To",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      color: Color(0xff3A4276),
+                                      fontWeight: FontWeight.w800,
+                                    )),
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Radio(
-                                    value: 2,
-                                    groupValue: selectedRadio,
-                                    activeColor: Colors.blue,
-                                    onChanged: (val) {
-                                      setSelectedRadio(val);
-                                    },
-                                  ),
-                                  Text("Prime",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: Color(0xff3A4276),
-                                        fontWeight: FontWeight.w500,
-                                      ))
-                                ],
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Radio(
-                                    value: 3,
-                                    groupValue: selectedRadio,
-                                    activeColor: Colors.green,
-                                    onChanged: (val) {
-                                      setSelectedRadio(val);
-                                    },
-                                  ),
-                                  Text("Non-Prime",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: Color(0xff3A4276),
-                                        fontWeight: FontWeight.w500,
-                                      ))
-                                ],
+                              Theme(
+                                data: Theme.of(context).copyWith(
+                                    unselectedWidgetColor: Colors.black),
+                                child: Row(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Radio(
+                                          value: 1,
+                                          groupValue: selectedRadio,
+                                          activeColor: Colors.pink[400],
+                                          onChanged: (val) {
+                                            setSelectedRadio(val);
+                                          },
+                                        ),
+                                        Text("Common",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              color: Color(0xff3A4276),
+                                              fontWeight: FontWeight.w500,
+                                            )),
+                                        Row(
+                                          children: <Widget>[
+                                            Radio(
+                                              value: 2,
+                                              groupValue: selectedRadio,
+                                              activeColor: Colors.greenAccent,
+                                              onChanged: (val) {
+                                                setSelectedRadio(val);
+                                              },
+                                            ),
+                                            Text("Prime",
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  color: Color(0xff3A4276),
+                                                  fontWeight: FontWeight.w500,
+                                                ))
+                                          ],
+                                        ),
+                                        Row(
+                                          children: <Widget>[
+                                            Radio(
+                                              value: 3,
+                                              groupValue: selectedRadio,
+                                              activeColor:
+                                                  Colors.lightBlueAccent,
+                                              onChanged: (val) {
+                                                setSelectedRadio(val);
+                                              },
+                                            ),
+                                            Text("Non-Prime",
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  color: Color(0xff3A4276),
+                                                  fontWeight: FontWeight.w500,
+                                                ))
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
@@ -558,11 +575,10 @@ class _ConversationState extends State<Conversation> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                        
                           IconButton(
                             icon: Icon(
                               Icons.image,
-                              color: Color(0xff3E8Df3),
+                              color: Colors.white,
                             ),
                             onPressed: () {
                               Navigator.push(context,
@@ -593,7 +609,13 @@ class _ConversationState extends State<Conversation> {
                               //  );
                             },
                           ),
-
+                          SizedBox(
+                            height: 45,
+                            width: 2,
+                            child: Container(
+                              color: Colors.black,
+                            ),
+                          ),
                           Flexible(
                             child: TextField(
 //                                                     onTap: () {
@@ -610,11 +632,10 @@ class _ConversationState extends State<Conversation> {
                                 contentPadding: EdgeInsets.all(10.0),
                                 border: InputBorder.none,
                                 enabledBorder: InputBorder.none,
-                                hintText:
-                                    "Write your message... ${messageCount}",
+                                hintText: "message count - ${messageCount}",
                                 hintStyle: GoogleFonts.poppins(
                                   fontSize: 12,
-                                  color: Color(0xff3A4276),
+                                  color: Colors.white,
                                   fontWeight: FontWeight.w300,
                                 ),
                               ),
@@ -625,11 +646,11 @@ class _ConversationState extends State<Conversation> {
                           IconButton(
                             icon: Icon(
                               Icons.send,
-                              color: Theme.of(context).accentColor,
+                              color: Colors.white,
                             ),
                             onPressed: () {
                               // TODO: show error to user when message is not delivered
-                             sendMessageFun();
+                              sendMessageFun();
                             },
                           )
                         ],
@@ -681,92 +702,91 @@ class _ConversationState extends State<Conversation> {
     );
   }
 
-Widget appBarWid(){
-  return AppBar(
-          automaticallyImplyLeading: false,
-          iconTheme: IconThemeData(color: Colors.blueAccent, size: 10.0),
-          elevation: 3,
-          titleSpacing: 0,
-          title: InkWell(
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      "${widget.groupLogo}",
-                    ),
-                  ),
+  Widget appBarWid() {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      iconTheme: IconThemeData(color: Colors.blueAccent, size: 10.0),
+      elevation: 3,
+      titleSpacing: 0,
+      title: InkWell(
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  "${widget.groupLogo}",
                 ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            "${widget.groupTitle.toString().toUpperCase()}",
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 1.0),
-                            child: Text(
-                              "${NumberFormat.compact().format(widget.followersCount) ?? '0'} Followers ",
-                              style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                color: Color(0xff171822),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xFF2ecc71),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
-                            child: Text(
-                              "👑 ${groupGrade} ",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        "${widget.groupTitle.toString().toUpperCase()}",
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 5),
+                  Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 1.0),
+                        child: Text(
+                          "${NumberFormat.compact().format(widget.followersCount) ?? '0'} Followers ",
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFF2ecc71),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        child: Text(
+                          "👑 ${groupGrade} ",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            onTap: () {},
-          ),
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(
-                  Icons.share,
-                  color: Colors.blueAccent,
-                ),
-                onPressed: () async {
-                  FlutterShare.share(
-                      title:
-                          'check our my official Group # ${widget.groupTitle} ✌',
-                      text:
-                          'Check out my official Group ⚡ ${widget.groupTitle} 🔥🎯✌ 👑🎁 👍',
-                      linkUrl:
-                          "https://play.google.com/store/apps/details?id=com.candc.chatogram",
-                      chooserTitle: 'Example Chooser Title');
-                }),
+          ],
+        ),
+        onTap: () {},
+      ),
+      actions: <Widget>[
+        IconButton(
+            icon: Icon(
+              Icons.share,
+              color: Colors.blueAccent,
+            ),
+            onPressed: () async {
+              FlutterShare.share(
+                  title: 'check our my official Group # ${widget.groupTitle} ✌',
+                  text:
+                      'Check out my official Group ⚡ ${widget.groupTitle} 🔥🎯✌ 👑🎁 👍',
+                  linkUrl:
+                      "https://play.google.com/store/apps/details?id=com.candc.chatogram",
+                  chooserTitle: 'Example Chooser Title');
+            }),
 // START of feedback button
 //                IconButton(
 //               icon: Icon(
@@ -799,189 +819,176 @@ Widget appBarWid(){
 //               },
 //             ),
 
-            // END of feedback button
-            // display for group members
-            Visibility(
-              visible: widget.chatOwnerId != widget.userId,
-              child: new PopupMenuButton(
-                  onSelected: (value) {
-                    if (value == "Profile") {
-                      profileRoute(context, 'member');
-                    } else if (value == "Report") {
-                      Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                          builder: (BuildContext context) => ReportScreen(
-                              chatId: widget.chatId, uId: widget.userId),
+        // END of feedback button
+        // display for group members
+        Visibility(
+          visible: widget.chatOwnerId != widget.userId,
+          child: new PopupMenuButton(
+              onSelected: (value) {
+                if (value == "Profile") {
+                  profileRoute(context, 'member');
+                } else if (value == "Report") {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (BuildContext context) => ReportScreen(
+                          chatId: widget.chatId, uId: widget.userId),
+                    ),
+                  );
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+                    PopupMenuItem(
+                      value: "Profile",
+                      child: Text("Profile",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                    PopupMenuItem(
+                      value: "Report",
+                      child: Text("Report",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                    // PopupMenuItem(
+                    //   value: "Exit Group",
+                    //   child: Text("Exit Group"),
+                    // ),
+                  ]),
+        ),
+        // display for group owners
+        Visibility(
+          visible: widget.chatOwnerId == widget.userId,
+          child: new PopupMenuButton(
+              onSelected: (value) {
+                if (value == "Approve Payments") {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (BuildContext context) => JoinRequestApproval(
+                        chatId: widget.chatId,
+                        groupName: widget.groupTitle,
+                      ),
+                    ),
+                  );
+                } else if (value == "Expired Memberships") {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (BuildContext context) => GroupMembersHome(
+                          groupMembersJson: widget.approvedGroupsJson ?? [],
+                          chatId: widget.chatId,
+                          ownerMailId: widget.senderMailId,
+                          groupTitle: widget.groupTitle,
                         ),
-                      );
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuItem<String>>[
-                        PopupMenuItem(
-                          value: "Profile",
-                          child: Text("Profile",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        PopupMenuItem(
-                          value: "Report",
-                          child: Text("Report",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        // PopupMenuItem(
-                        //   value: "Exit Group",
-                        //   child: Text("Exit Group"),
-                        // ),
-                      ]),
-            ),
-            // display for group owners
-            Visibility(
-              visible: widget.chatOwnerId == widget.userId,
-              child: new PopupMenuButton(
-                  onSelected: (value) {
-                    if (value == "Approve Payments") {
-                      Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              JoinRequestApproval(
-                            chatId: widget.chatId,
-                            groupName: widget.groupTitle,
-                          ),
-                        ),
-                      );
-                    } else if (value == "Expired Memberships") {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                            builder: (BuildContext context) => GroupMembersHome(
-                              groupMembersJson: widget.approvedGroupsJson ?? [],
-                              chatId: widget.chatId,
-                              ownerMailId: widget.senderMailId,
-                              groupTitle: widget.groupTitle,
-                            ),
-                          ));
-                    } else if (value == "Earnings") {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                            builder: (BuildContext context) => GroupEarnings(),
-                          ));
-                    } else if (value == "Edit Details") {
-                      profileRoute(context, 'owner');
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuItem<String>>[
-                        PopupMenuItem(
-                          value: "Approve Payments",
-                          child: Text("Prime User Payments",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        PopupMenuItem(
-                          value: "Expired Memberships",
-                          child: Text("Prime Members",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        PopupMenuItem(
-                          value: "Earnings",
-                          child: Text("Earnings",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        PopupMenuItem(
-                          value: "Edit Details",
-                          child: Text("Edit Profile",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                      ]),
-            )
-          ],
-        );
-}
+                      ));
+                } else if (value == "Earnings") {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (BuildContext context) => GroupEarnings(),
+                      ));
+                } else if (value == "Edit Details") {
+                  profileRoute(context, 'owner');
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+                    PopupMenuItem(
+                      value: "Approve Payments",
+                      child: Text("Prime User Payments",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                    PopupMenuItem(
+                      value: "Expired Memberships",
+                      child: Text("Prime Members",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                    PopupMenuItem(
+                      value: "Earnings",
+                      child: Text("Earnings",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                    PopupMenuItem(
+                      value: "Edit Details",
+                      child: Text("Edit Profile",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                  ]),
+        )
+      ],
+    );
+  }
+
   // sendMessgeFun
-  sendMessageFun(){
-                              try {
-                                if (msgDeliveryMode == "Prime") {
-                                  widget.msgFullPmCount =
-                                      widget.msgFullPmCount + 1;
-                                } else if (msgDeliveryMode == "Non-Prime") {
-                                  widget.msgFullCount = widget.msgFullCount + 1;
-                                } else {
-                                  widget.msgFullCount = widget.msgFullCount + 1;
-                                  widget.msgFullPmCount =
-                                      widget.msgFullPmCount + 1;
-                                }
+  sendMessageFun() {
+    try {
+      if (msgDeliveryMode == "Prime") {
+        widget.msgFullPmCount = widget.msgFullPmCount + 1;
+      } else if (msgDeliveryMode == "Non-Prime") {
+        widget.msgFullCount = widget.msgFullCount + 1;
+      } else {
+        widget.msgFullCount = widget.msgFullCount + 1;
+        widget.msgFullPmCount = widget.msgFullPmCount + 1;
+      }
 
-                                var now = new DateTime.now();
-                                var body = {
-                                  "messageBody": _chatMessageText.text,
-                                  "date": now,
-                                  "author": widget.userId,
-                                  "type": "text",
-                                  "premium": (msgDeliveryMode == "Prime"),
-                                  "messageMode": msgDeliveryMode
-                                };
-                                // var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now};
-                                var lastMessageBody = {
-                                  "lastMsg": _chatMessageText.text,
-                                  "lastMsgTime": now.toString(),
-                                  "title": widget.groupTitle,
-                                  "msgFullCount": widget.msgFullCount,
-                                  "msgFullPmCount": widget.msgFullPmCount,
-                                  "lastPmMsg": _chatMessageText.text
-                                };
+      var now = new DateTime.now();
+      var body = {
+        "messageBody": _chatMessageText.text,
+        "date": now,
+        "author": widget.userId,
+        "type": "text",
+        "premium": (msgDeliveryMode == "Prime"),
+        "messageMode": msgDeliveryMode
+      };
+      // var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now};
+      var lastMessageBody = {
+        "lastMsg": _chatMessageText.text,
+        "lastMsgTime": now.toString(),
+        "title": widget.groupTitle,
+        "msgFullCount": widget.msgFullCount,
+        "msgFullPmCount": widget.msgFullPmCount,
+        "lastPmMsg": _chatMessageText.text
+      };
 
-                                if (messageCount > 120 &&
-                                    (msgDeliveryMode == "Prime" ||
-                                        msgDeliveryMode == "Non-Prime")) {
-                                  nonPrimeMessageContent.removeAt(0);
-                                  nonPrimeMessageContent.add(body);
-                                  FirebaseController.instanace
-                                      .sendToClear121Message(
-                                          widget.chatId,
-                                          nonPrimeMessageContent,
-                                          lastMessageBody,
-                                          msgDeliveryMode);
-                                } else {
-                                  FirebaseController.instanace.sendChatMessage(
-                                      widget.chatId,
-                                      body,
-                                      lastMessageBody,
-                                      msgDeliveryMode);
-                                }
+      if (messageCount > 120 &&
+          (msgDeliveryMode == "Prime" || msgDeliveryMode == "Non-Prime")) {
+        nonPrimeMessageContent.removeAt(0);
+        nonPrimeMessageContent.add(body);
+        FirebaseController.instanace.sendToClear121Message(widget.chatId,
+            nonPrimeMessageContent, lastMessageBody, msgDeliveryMode);
+      } else {
+        FirebaseController.instanace.sendChatMessage(
+            widget.chatId, body, lastMessageBody, msgDeliveryMode);
+      }
 
-                                _chatMessageText.text = "";
-scrollToBottomFun();
-                                Timer(
-                                    Duration(milliseconds: 500),
-                                    () => _scrollController.jumpTo(
-                                        _scrollController
-                                            .position.maxScrollExtent));
-                              } catch (e) {}
-  } 
+      _chatMessageText.text = "";
+      scrollToBottomFun();
+      Timer(
+          Duration(milliseconds: 500),
+          () => _scrollController
+              .jumpTo(_scrollController.position.maxScrollExtent));
+    } catch (e) {}
+  }
 }
